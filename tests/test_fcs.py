@@ -135,7 +135,7 @@ def test_cubic_fnc():
         assert np.max(d) < 1e-14, "{}".format(np.max(d))
 
         # use third order finite difference approximation for endpoint curvature
-        spl = fcSpline.FCS(xl, xh, y, ypp_specs=1, use_pure_python=use_pure_python)
+        spl = fcSpline.FCS(xl, xh, y, ypp_specs=3, use_pure_python=use_pure_python)
         y_spl = spl(x_fine)
         d = np.abs(x_fine**3 - y_spl)
         assert np.max(d) < 1e-14, "{}".format(np.max(d))
@@ -143,19 +143,22 @@ def test_cubic_fnc():
 
 
 
-def test_NPointPoly():
+def test_NPointPoly(plot=False):
     x = [0, 1, 2, 3, 4, 5]
     y = [1, 2, 1, 2, 1, 2]
 
     poly = fcSpline.NPointPoly(x, y)
+    for i in range(len(x)):
+        assert(poly(x[i]) == y[i])
 
-    import matplotlib.pyplot as plt
-    plt.plot(x,y, ls='', marker='.')
+    if plot:
+        import matplotlib.pyplot as plt
+        plt.plot(x,y, ls='', marker='.')
 
-    xx = np.linspace(x[0]-1, x[-1]+1, 500)
-    yy = [poly(xi) for xi in xx]
-    plt.plot(xx, yy)
-    plt.show()
+        xx = np.linspace(x[0]-1, x[-1]+1, 500)
+        yy = [poly(xi) for xi in xx]
+        plt.plot(xx, yy)
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -163,4 +166,4 @@ if __name__ == "__main__":
     test_spline_property()
     test_cubic_fnc()
     test_few_points()
-    #test_NPointPoly()
+    #test_NPointPoly(plot=True))

@@ -8,7 +8,7 @@ author      = u"Richard Hartmann"
 authors     = [author]
 description = 'A fast cubic spline interpolator for real and complex data.'
 name        = 'fcSpline'
-version     = '0.1'
+version     = '1.0'
 
 
 setup(
