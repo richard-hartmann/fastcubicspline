@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel", "Cython", "numpy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name        = "fcSpline"
+version     = "1.0.0"
+description = "A fast cubic spline interpolator for real and complex data."
+readme      = "README.md"
+authors     = [{ name = "Richard Hartmann", email = "richard.hartmann@tu-dresden.de"}]
+license     = { text = "BSD (3 clause)" }
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Topic :: Utilities",
+    "Intended Audience :: Science/Research",
+              ]
+keywords    = ["numerics", "spline", "complex"]
+dependencies = [
+     "numpy >= 1.20",
+     "scipy >= 1.6",
+             ]
+requires-python = ">=3.4"
+
+[project.optional-dependencies]
+dev = ["matplotlib", "pytest"]
+
+[project.urls]
+Homepage = "https://github.com/cimatosa/fcSpline"
+
+
+#        ext_modules = cythonize(Extension("fcSpline.fcs_c",
+#                                          ["./fcSpline/fcs_c.pyx"],
+#                                          extra_compile_args=['-O3'],
+#                                          include_dirs = [numpy.get_include()],
+#                                          )),
