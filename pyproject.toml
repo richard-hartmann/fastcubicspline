@@ -1,35 +1,30 @@
-[build-system]
-requires = ["setuptools>=61.0.0", "wheel", "Cython", "numpy"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name        = "fcSpline"
-version     = "1.0.0"
+[tool.poetry]
 description = "A fast cubic spline interpolator for real and complex data."
-readme      = "README.md"
-authors     = [{ name = "Richard Hartmann", email = "richard.hartmann@tu-dresden.de"}]
-license     = { text = "BSD (3 clause)" }
+name = "fcspline"
+version = "0.2.0"
+authors = [
+    "Richard Hartmann <richard.hartmann@tu-dresden.de>",
+]
+license = "BSD (3 clause)"
 classifiers = [
+    "Operating System :: OS Independent",
     "License :: OSI Approved :: BSD License",
     "Topic :: Utilities",
-    "Intended Audience :: Science/Research",
-              ]
-keywords    = ["numerics", "spline", "complex"]
-dependencies = [
-     "numpy >= 1.20",
-     "scipy >= 1.6",
-             ]
-requires-python = ">=3.4"
+    "Intended Audience :: Science/Research"
+]
+repository = "https://github.com/cimatosa/fcSpline"
+readme = "README.md"
+build = 'build.py'
 
-[project.optional-dependencies]
-dev = ["matplotlib", "pytest"]
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+numpy = "^1.20.3"
+scipy = "^1.7.3"
 
-[project.urls]
-Homepage = "https://github.com/cimatosa/fcSpline"
+[tool.poetry.dev-dependencies]
+Cython = "^0.29.25"
+setuptools = "^59.5.0"
 
-
-#        ext_modules = cythonize(Extension("fcSpline.fcs_c",
-#                                          ["./fcSpline/fcs_c.pyx"],
-#                                          extra_compile_args=['-O3'],
-#                                          include_dirs = [numpy.get_include()],
-#                                          )),
+[build-system]
+requires = ["poetry>=1.4", "cython", "setuptools", "numpy"]
+build-backend = "poetry.core.masonry.api"
