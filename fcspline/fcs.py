@@ -1,15 +1,20 @@
+# python imports
+import warnings
+import traceback
+
+# third party imports
 import numpy as np
 from scipy.linalg import solve_banded
-import traceback
-import warnings
 
+# fcspline import
 try:
     from . import fcs_c
-    has_fcs_s = True
-except ImportError:
+    HAS_FCS_C = True
+except ImportError as e:
     warnings.warn("could not import cython extension 'fcs_c' -> use pure Python variant")
+    warnings.warn(f"ImportError: {e}")
     traceback.print_exc()
-    has_fcs_s = False
+    HAS_FCS_C = False
     
 
 def _intp(x, x_low, dx, y, ypp, n):
@@ -65,13 +70,11 @@ class FCS(object):
             self.y = np.asarray(y, dtype=np.float64)
             self.dtype = np.float64
 
-
         if self.y.ndim > 1:
             raise ValueError("y must be 1D")
 
         self.n = len(y)
         self.dx = (x_high - x_low) / (self.n-1)
-
 
         if ypp_specs is None:
             self.ypp_l = 0
@@ -91,7 +94,7 @@ class FCS(object):
         self.y = np.hstack((self.y, [0]))
         self.ypp = np.hstack((self.ypp, [0]))
 
-        if has_fcs_s and not use_pure_python:
+        if HAS_FCS_C and not use_pure_python:
             if self.dtype == np.complex128:
                 self.intp = fcs_c.intp_cplx
                 self.intp_array = fcs_c.intp_cplx_array
@@ -99,11 +102,10 @@ class FCS(object):
                 self.intp = fcs_c.intp
                 self.intp_array = fcs_c.intp_array
         else:
-            if has_fcs_s:
+            if HAS_FCS_C:
                 warnings.warn("Note: you are using pure python, even though the c extension is avaiable!")
             self.intp = _intp
             self.intp_array = _intp_array
-
 
     def _get_ypp(self):
         ab = np.zeros(shape=(3, self.n))
@@ -126,6 +128,7 @@ class FCS(object):
             return res
         else:
             return self.intp(x, self.x_low, self.dx, self.y, self.ypp, self.n)
+
 
 class NPointPoly(object):
     def __init__(self, x, y):
