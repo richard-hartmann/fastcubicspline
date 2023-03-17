@@ -60,6 +60,9 @@ Install `fcspline` and its dependencies into a virtual environment with
 and spawn a shell using that environment `poetry shell`.
 Now you can check if the tests pass with `pytest`.
 
+In case of poetry errors, you might want to get the latest poetry version
+with `poetry self update`.
+
 ### Manually Build Cython Extension
 
 Some distutils magic is contained in `build_ext.py` so you can simply call
@@ -68,6 +71,11 @@ Some distutils magic is contained in `build_ext.py` so you can simply call
 
 to build the Cython extension inplace.
 Run `pytest` to verify that the Cython extension is available.
+
+Clean the build files by calling
+
+    python3 build_ext.py clean
+
 
 # Testing
 
