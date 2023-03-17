@@ -1,4 +1,4 @@
-# fcspline
+# fastcubicspline
 a fast cubic spline interpolator for equally spaced values and complex data
 
 # Why not using scipy's Cubic Spline?
@@ -13,7 +13,7 @@ What are the drawbacks? Well, fcSpline works on equally spaced data only.
 
 # Example
 
-    >>> import fcspline
+    >>> from fastcubicspline import FCS
     # set up x-limits
     >>> x_low = 1
     >>> x_high = 5
@@ -22,7 +22,7 @@ What are the drawbacks? Well, fcSpline works on equally spaced data only.
     >>> y_data = [9+9j, 4+4j, 0, 6+6j, 2+2j]
  
     # class init
-    >>> fcs = fcspline.FCS(x_low, x_high, y_data)
+    >>> fcs = FCS(x_low, x_high, y_data)
     
     # simply call the FCS-object like a regular function
     # to get interpolated values

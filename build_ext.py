@@ -21,8 +21,8 @@ import shutil
 import numpy
 
 fcs_c_ext = Extension(
-    "fcspline.fcs_c",
-    sources=["./fcspline/fcs_c.pyx"],
+    "fastcubicspline.fcs_c",
+    sources=["./fastcubicspline/fcs_c.pyx"],
     include_dirs=[numpy.get_include()],
     extra_compile_args=['-O3'],
 )
@@ -77,8 +77,9 @@ def cmd_clean():
 
     dirs_to_remove = [
         root_path / 'build',
-        root_path / 'fcspline.egg-info',
-        root_path / 'fcspline/__pycache__',
+        root_path / 'dist',
+        root_path / 'fastcubicspline.egg-info',
+        root_path / 'fastcubicspline/__pycache__',
     ]
     for d in dirs_to_remove:
         if d.exists():
@@ -87,7 +88,7 @@ def cmd_clean():
         else:
             print(f"cannot rm {d}, does not exist")
 
-    for f in (root_path / 'fcspline').iterdir():
+    for f in (root_path / 'fastcubicspline').iterdir():
         name = f.name
         if (
             (name == 'fcs_c.c') or
@@ -106,8 +107,8 @@ if __name__ == "__main__":
         "command",
         help="what to do, choose between 'build_ext' (default), or 'clear'\n" +
         "  build_ext: triggers Cython inplace build (using distutils magic)\n" +
-        "  clean: without asking remove 'build/', 'fcspline.egg-info/', 'fcspline/fcs_c.c', 'fcspline/fcs_c*.so', "+
-        "'fcspline/__pycache__'",
+        "  clean: without asking remove 'build/', 'dist/', 'fcspline.egg-info/', 'fcspline/fcs_c.c', " +
+        "'fcspline/fcs_c*.so', 'fcspline/__pycache__'",
         default='build_ext',
         nargs='?',
         type=str,

@@ -1,6 +1,6 @@
 [tool.poetry]
 description = "A fast cubic spline interpolator for real and complex data."
-name = "fcspline"
+name = "FastCubicSpline"
 version = "1.1.1"
 authors = [
     "Richard Hartmann <richard.hartmann@tu-dresden.de>",

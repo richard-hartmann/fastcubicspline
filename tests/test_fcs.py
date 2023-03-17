@@ -1,5 +1,5 @@
 import numpy as np
-import fcspline
+import fastcubicspline
 
 def catch_exception(func, args, exc):
     try:
@@ -16,7 +16,7 @@ def _calls_helper(y):
     xh = 5
 
     try:
-        fcspline.FCS(xl, xh, y, ypp_specs=4)
+        fastcubicspline.FCS(xl, xh, y, ypp_specs=4)
     except ValueError as e:
         print("OK: caught ValueError", e)
     else:
@@ -24,7 +24,7 @@ def _calls_helper(y):
 
     for ypp_specs in [None, 1, 2, 3, (10, 20)]:
         for pp in [True, False]:
-            spl = fcspline.FCS(xl, xh, y, ypp_specs=ypp_specs, use_pure_python=pp)
+            spl = fastcubicspline.FCS(xl, xh, y, ypp_specs=ypp_specs, use_pure_python=pp)
             spl(xl)
             spl(xh)
             spl((xl+xh)/2)
@@ -41,10 +41,10 @@ def _calls_helper(y):
             spl(xfine)
 
 def test_cython_extension():
-    # import fcspline.fcs_c
+    # import fastcubicspline.fcs_c
     # print(fcs_c)
 
-    assert fcspline.HAS_FCS_C
+    assert fastcubicspline.HAS_FCS_C
 
 def test_calls():
     # real data
@@ -66,7 +66,7 @@ def test_spline_property():
     x = np.linspace(xl, xh, n)
     y = np.sin(x)
 
-    spl = fcspline.FCS(xl, xh, y, use_pure_python=True)
+    spl = fastcubicspline.FCS(xl, xh, y, use_pure_python=True)
 
     # here we check that the spline evaluates exactly to the data points
     for i, xi in enumerate(x):
@@ -100,7 +100,7 @@ def test_spline_property():
         f = lambda x: np.sin(x) + 1j*np.exp(-(x-5)**2/10)
         y = f(x)
 
-        spl = fcspline.FCS(xl, xh, y, ypp_specs = 3)
+        spl = fastcubicspline.FCS(xl, xh, y, ypp_specs = 3)
         xf = np.linspace(xl, xh, 4*(ni-1)+1)
         yf = spl(xf)
         rd = np.abs(f(xf) - yf)/np.abs(f(xf))
@@ -114,7 +114,7 @@ def test_few_points():
     x = np.linspace(xl, xh, n)
     y = [1,2,1,2,1]
 
-    spl = fcspline.FCS(xl, xh, y, use_pure_python=True)
+    spl = fastcubicspline.FCS(xl, xh, y, use_pure_python=True)
     for i in range(len(y)):
         assert spl(x[i]) == y[i]
 
@@ -129,13 +129,13 @@ def test_cubic_fnc():
 
     for use_pure_python in [True, False]:
         # use analytic value for the endpoint curvature
-        spl = fcspline.FCS(xl, xh, y, ypp_specs=(0, 24), use_pure_python=use_pure_python)
+        spl = fastcubicspline.FCS(xl, xh, y, ypp_specs=(0, 24), use_pure_python=use_pure_python)
         y_spl = spl(x_fine)
         d = np.abs(x_fine ** 3 - y_spl)
         assert np.max(d) < 1e-14, "{}".format(np.max(d))
 
         # use third order finite difference approximation for endpoint curvature
-        spl = fcspline.FCS(xl, xh, y, ypp_specs=3, use_pure_python=use_pure_python)
+        spl = fastcubicspline.FCS(xl, xh, y, ypp_specs=3, use_pure_python=use_pure_python)
         y_spl = spl(x_fine)
         d = np.abs(x_fine**3 - y_spl)
         assert np.max(d) < 1e-14, "{}".format(np.max(d))
@@ -147,7 +147,7 @@ def test_NPointPoly(plot=False):
     x = [0, 1, 2, 3, 4, 5]
     y = [1, 2, 1, 2, 1, 2]
 
-    poly = fcspline.NPointPoly(x, y)
+    poly = fastcubicspline.NPointPoly(x, y)
     for i in range(len(x)):
         assert(poly(x[i]) == y[i])
 
