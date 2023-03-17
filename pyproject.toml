@@ -1,7 +1,7 @@
 [tool.poetry]
 description = "A fast cubic spline interpolator for real and complex data."
 name = "fcspline"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
     "Richard Hartmann <richard.hartmann@tu-dresden.de>",
 ]
@@ -23,8 +23,8 @@ scipy = "^1.7.3"
 
 [tool.poetry.dev-dependencies]
 Cython = "^0.29.25"
-pytest = "7.2.2"
+pytest = "^7.2.2"
 
 [build-system]
-requires = ["poetry>=1.4", "cython", "numpy"]
+requires = ["poetry>=1.4", "Cython", "numpy"]
 build-backend = "poetry.core.masonry.api"
