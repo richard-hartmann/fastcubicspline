@@ -13,21 +13,23 @@ What are the drawbacks? Well, fcSpline works on equally spaced data only.
 
 # Example
 
-    >>> from fastcubicspline import FCS
-    # set up x-limits
-    >>> x_low = 1
-    >>> x_high = 5
-    
-    # set up the y-data, here complex values
-    >>> y_data = [9+9j, 4+4j, 0, 6+6j, 2+2j]
- 
-    # class init
-    >>> fcs = FCS(x_low, x_high, y_data)
-    
-    # simply call the FCS-object like a regular function
-    # to get interpolated values
-    >>> print(fcs(2.5))
-    (0.921875+0.921875j)
+```python
+>>> from fastcubicspline import FCS
+# set up x-limits
+>>> x_low = 1
+>>> x_high = 5
+
+# set up the y-data, here complex values
+>>> y_data = [9+9j, 4+4j, 0, 6+6j, 2+2j]
+
+# class init
+>>> fcs = FCS(x_low, x_high, y_data)
+
+# simply call the FCS-object like a regular function
+# to get interpolated values
+>>> print(fcs(2.5))
+(0.921875+0.921875j)
+```
 
 # Install
 
