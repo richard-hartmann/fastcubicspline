@@ -14,21 +14,21 @@ What are the drawbacks? Well, fcSpline works on equally spaced data only.
 # Example
 
 ```python
->>> from fastcubicspline import FCS
+from fastcubicspline import FCS
 # set up x-limits
->>> x_low = 1
->>> x_high = 5
+x_low = 1
+x_high = 5
 
 # set up the y-data, here complex values
->>> y_data = [9+9j, 4+4j, 0, 6+6j, 2+2j]
+y_data = [9+9j, 4+4j, 0, 6+6j, 2+2j]
 
 # class init
->>> fcs = FCS(x_low, x_high, y_data)
+fcs = FCS(x_low, x_high, y_data)
 
 # simply call the FCS-object like a regular function
 # to get interpolated values
->>> print(fcs(2.5))
-(0.921875+0.921875j)
+print(fcs(2.5))
+# (0.921875+0.921875j)
 ```
 
 # Install
@@ -61,6 +61,7 @@ Install `fcspline` and its dependencies into a virtual environment with
 
 and spawn a shell using that environment `poetry shell`.
 Now you can check if the tests pass with `pytest`.
+`poetry install` should build the cython extension which you cen check with `pytest -v -k cython`. 
 
 In case of poetry errors, you might want to get the latest poetry version
 with `poetry self update`.
@@ -72,7 +73,7 @@ Some distutils magic is contained in `build_ext.py` so you can simply call
     python3 build_ext.py
 
 to build the Cython extension inplace.
-Run `pytest` to verify that the Cython extension is available.
+Run `pytest -v -k cython` to verify that the Cython extension is available.
 
 Clean the build files by calling
 
