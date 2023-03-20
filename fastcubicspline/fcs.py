@@ -1,9 +1,11 @@
 # python imports
 import warnings
 import traceback
+from typing import Union
 
 # third party imports
 import numpy as np
+from numpy.typing import NDArray
 from scipy.linalg import solve_banded
 
 # fcspline import
@@ -15,26 +17,77 @@ except ImportError as e:
     warnings.warn(f"ImportError: {e}")
     traceback.print_exc()
     HAS_FCS_C = False
-    
 
-def _intp(x, x_low, dx, y, ypp, n):
-    j = int( (x-x_low) / dx)
+
+def _intp(x: float, x_low: float, dx: float, y: NDArray, ypp: NDArray, n: int) -> Union[float, complex]:
+    """
+    cubic spline interpolation formula, specific for equally spaced x-values
+
+    adapted from, Ch. 3.3 pp 120
+
+        Press, W.H., Teukolsky, S.A., Vetterling, W.T., Flannery, B.P., 2007.
+        Numerical Recipes 3rd Edition: The Art of Scientific Computing,
+        Auflage: 3. ed. Cambridge University Press, Cambridge, UK; New York.
+
+
+    Parameters:
+        x:
+            point at which to evaluate the spline
+        x_low:
+            lowest value of the x-axes, i.e., f(x_low) = y[0]
+        dx:
+            the spacing of the x values, i.e., dx =x[i+1] - x[i]
+        y:
+            the y values y[i] = f(x[i])
+        ypp:
+            the second derivative of the cubic spline at the points x[i], it follows
+            consistently by solving a tri-diagonal eigenvalue equation
+        n:
+            size of the y values
+
+    Returns:
+        the value of the cubic spline at x
+    """
+    j = int((x-x_low) / dx)
     if j < 0:
         j = 0
     elif j >= n - 1:
         j = n - 2
     x_jp1 = x_low + (j + 1) * dx
 
-    A = (x_jp1 - x) / dx
-    B = 1 - A
+    a = (x_jp1 - x) / dx
+    b = 1 - a
 
-    C = 1 / 6 * (A ** 3 - A) * dx ** 2
-    D = 1 / 6 * (B ** 3 - B) * dx ** 2
+    c = 1 / 6 * (a ** 3 - a) * dx ** 2
+    d = 1 / 6 * (b ** 3 - b) * dx ** 2
 
-    return A * y[j] + B * y[j + 1] + C * ypp[j] + D * ypp[j + 1]
+    return a * y[j] + b * y[j + 1] + c * ypp[j] + d * ypp[j + 1]
 
 
-def _intp_array(x, x_low, dx, y, ypp, n):
+def _intp_array(x: NDArray, x_low: float, dx: float, y: NDArray, ypp: NDArray, n: int) -> NDArray:
+    """
+    call the interpolation for an array of x values
+
+    Same parameters as in `_intp`
+
+    Parameters:
+        x:
+            points at which to evaluate the spline
+        x_low:
+            lowest value of the x-axes, i.e., f(x_low) = y[0]
+        dx:
+            the spacing of the x values, i.e., dx =x[i+1] - x[i]
+        y:
+            the y values y[i] = f(x[i])
+        ypp:
+            the second derivative of the cubic spline at the points x[i], it follows
+            consistently by solving a tri-diagonal eigenvalue equation
+        n:
+            size of the y values
+
+    Returns:
+        the values of the cubic spline at x-values
+    """
     res = np.empty(shape=x.shape, dtype=y.dtype)
     for i, xi in enumerate(x):
         res[i] = _intp(xi, x_low, dx, y, ypp, n)
@@ -108,6 +161,10 @@ class FCS(object):
             self.intp_array = _intp_array
 
     def _get_ypp(self):
+        """
+        solve the
+        :return:
+        """
         ab = np.zeros(shape=(3, self.n))
         ab[0, 2:] = 1
         ab[1, :] = 4
