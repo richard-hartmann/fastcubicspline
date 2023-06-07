@@ -33,9 +33,9 @@ print(fcs(2.5))
 
 # Install
 
-`fcspline` is on PyPi. So you can simply install the latest release with
+`fastcubicspline` is on PyPi. So you can simply install the latest release with
 
-    pip install fcspline
+    pip install fastcubicspline
 
 ## From Source
 
@@ -55,7 +55,7 @@ for an installation to the standard location.
 ### poetry
 
 Change into the fcSpline package directory.
-Install `fcspline` and its dependencies into a virtual environment with
+Install `fastcubicspline` and its dependencies into a virtual environment with
 
     poetry install
 
