@@ -1,5 +1,6 @@
 import numpy as np
 import fastcubicspline
+from fastcubicspline.fcs import HAS_FCS_C
 
 
 def catch_exception(func, args, exc):
@@ -49,7 +50,7 @@ def test_cython_extension():
     # import fastcubicspline.fcs_c
     # print(fcs_c)
 
-    assert fastcubicspline.HAS_FCS_C
+    assert HAS_FCS_C
 
 
 def test_calls():

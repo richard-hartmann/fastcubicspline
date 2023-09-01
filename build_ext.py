@@ -1,12 +1,12 @@
 """
-This script provides the necessary information to build the Cython extension
+This script provides the necessary information to build the Cython extension.
 
-It implements two things:
-
-a) provides the hook for the poetry build system by implementing `build(setup_kwargs)`
-
-b) if executed as python script, i.e., `python3 build_ext.py`, do distutils magic to
+Default execution (just as poetry does), i.e., `python3 build_ext.py` does dome distutils magic to
 build the extension inplace which corresponds to former call of `setup.py build_ext --inplace`.
+
+running with the extra argument 'clean' deletes without asking any generated files, i.e,
+remove 'build/', 'dist/', 'fastcubicspline.egg-info/', 'fastcubicspline/fcs_c.c',
+'fastcubicspline/fcs_c*.so', 'fastcubicspline/__pycache__'.
 """
 from Cython.Build import cythonize
 import argparse
@@ -25,10 +25,26 @@ root_path = pathlib.Path(__file__).absolute().parent
 
 fcs_c_ext = Extension(
     "fastcubicspline.fcs_c",
-    sources=[str(root_path / "fastcubicspline/fcs_c.pyx")],
+    sources=["./fastcubicspline/fcs_c.pyx"],
     include_dirs=[numpy.get_include()],
     extra_compile_args=["-O3"],
 )
+
+class cd:
+    """
+    Context manager for changing the current working directory
+
+    taken from https://stackoverflow.com/questions/431684/equivalent-of-shell-cd-command-to-change-the-working-directory/13197763#13197763
+    """
+    def __init__(self, new_path):
+        self.new_path = os.path.expanduser(new_path)
+
+    def __enter__(self):
+        self.saved_path = os.getcwd()
+        os.chdir(self.new_path)
+
+    def __exit__(self, etype, value, traceback):
+        os.chdir(self.saved_path)
 
 
 # the following is adapted from https://stackoverflow.com/a/60163996
@@ -39,13 +55,15 @@ class BuildFailed(Exception):
 class ExtBuilder(build_ext):
     def run(self):
         try:
-            build_ext.run(self)
+            with cd(root_path):
+                build_ext.run(self)
         except (DistutilsPlatformError, FileNotFoundError):
             raise BuildFailed("File not found. Could not compile C extension.")
 
     def build_extension(self, ext):
         try:
-            build_ext.build_extension(self, ext)
+            with cd(root_path):
+                build_ext.build_extension(self, ext)
         except (CCompilerError, DistutilsExecError, DistutilsPlatformError, ValueError):
             raise BuildFailed("Could not compile C extension.")
 
@@ -56,9 +74,10 @@ def build(setup_kwargs):
     """
     # NOTE that with cythonize, ext_modules must not be a list!
     # so for more than one Cython extension things will need to be adapted
-    setup_kwargs.update(
-        {"ext_modules": cythonize(fcs_c_ext), "cmdclass": {"build_ext": ExtBuilder}}
-    )
+    with cd(root_path):
+        setup_kwargs.update(
+            {"ext_modules": cythonize(fcs_c_ext), "cmdclass": {"build_ext": ExtBuilder}}
+        )
 
 
 def cmd_build_ext():
@@ -96,6 +115,9 @@ def cmd_clean():
             os.remove(f)
 
 
+# note that upton poetry install / build, poetry actually triggers
+# Command '['... .venv/bin/python', 'build_ext.py']'
+# so the follows works such that this call will build the Cython extension
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="",
@@ -103,10 +125,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "command",
-        help="what to do, choose between 'build_ext' (default), or 'clear'\n"
+        help="what to do, choose between 'build_ext' or 'clear'\n"
         + "  build_ext: triggers Cython inplace build (using distutils magic)\n"
-        + "  clean: without asking remove 'build/', 'dist/', 'fcspline.egg-info/', 'fcspline/fcs_c.c', "
-        + "'fcspline/fcs_c*.so', 'fcspline/__pycache__'",
+        + "  clean: without asking remove 'build/', 'dist/', 'fastcubicspline.egg-info/', 'fastcubicspline/fcs_c.c', "
+        + "'fastcubicspline/fcs_c*.so', 'fastcubicspline/__pycache__'",
         default="build_ext",
         nargs="?",
         type=str,
@@ -118,4 +140,5 @@ if __name__ == "__main__":
     elif args.command == "clean":
         cmd_clean()
     else:
+        parser.print_help()
         raise ValueError(f"unknown command '{args.command}'")

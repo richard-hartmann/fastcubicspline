@@ -36,14 +36,14 @@ print(fcs(2.5))
 For convenience, this package also provides a polynomial interpolator.
 Note that the NPointPoly class is not intended for time crucial applications.
 ```python
-    from fastcubicspline import NPointPoly
-    # the x and y values
-    x = [1, 2, 4, 5, 8]
-    y = [9 + 9j, 4 + 4j, 0, 6 + 6j, 2 + 2j]
+from fastcubicspline import NPointPoly
+# the x and y values
+x = [1, 2, 4, 5, 8]
+y = [9 + 9j, 4 + 4j, 0, 6 + 6j, 2 + 2j]
 
-    npp = NPointPoly(x, y)
-    # call the NPointPoly-object to get interpolated value at any x
-    print(npp(2.5))
+npp = NPointPoly(x, y)
+# call the NPointPoly-object to get interpolated value at any x
+print(npp(2.5))
 ```
 
 (see also `examples/examples.py`)
@@ -110,7 +110,7 @@ Run and list all tests with
 
     pytest -v
 
-### References
+# References
 
     * Press, W.H., Teukolsky, S.A., Vetterling, W.T., Flannery, B.P., 2007.
       Numerical Recipes 3rd Edition: The Art of Scientific Computing,
@@ -119,7 +119,7 @@ Run and list all tests with
     * Wikipedia, Retrieved September 1, 2023, from 
       https://en.wikipedia.org/wiki/Finite_difference_coefficient#Forward_finite_difference
 
-### MIT licence
+# MIT licence
 Copyright (c) 2023 Richard Hartmann
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

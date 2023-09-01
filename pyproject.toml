@@ -1,7 +1,7 @@
 [tool.poetry]
 description = "A fast cubic spline interpolator for real and complex data."
 name = "fastcubicspline"
-version = "1.1.4"
+version = "1.1.5"
 authors = [
     "Richard Hartmann <richard.hartmann@tu-dresden.de>",
 ]
