@@ -19,11 +19,13 @@ build = 'build_ext.py'
 [tool.poetry.dependencies]
 python = "^3.9"
 numpy = "^1.20.3"
-scipy = "^1.7.3"
+black = "^23.7.0"
+matplotlib = "^3.7.2"
 
 [tool.poetry.dev-dependencies]
 Cython = "^0.29.25"
 pytest = "^7.2.2"
+scipy = "^1.7.3"
 setuptools = "^67.6.0"
 
 [build-system]

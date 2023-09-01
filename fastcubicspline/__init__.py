@@ -1,1 +1,1 @@
-from .fcs import *
+from .fcs import FCS, NPointPoly

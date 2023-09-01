@@ -10,6 +10,8 @@ of [scipy.interpolate.CubicSpline](https://docs.scipy.org/doc/scipy/reference/ge
 2) Natively handles complex data.
 
 What are the drawbacks? Well, fcSpline works on equally spaced data only.
+At the moment it supports 64-floats and 128-bit compex-values 
+(however, generalization should be trivial).
 
 # Example
 
@@ -30,6 +32,28 @@ fcs = FCS(x_low, x_high, y_data)
 print(fcs(2.5))
 # (0.921875+0.921875j)
 ```
+
+For convenience, this package also provides a polynomial interpolator.
+Note that the NPointPoly class is not intended for time crucial applications.
+```python
+    from fastcubicspline import NPointPoly
+    # the x and y values
+    x = [1, 2, 4, 5, 8]
+    y = [9 + 9j, 4 + 4j, 0, 6 + 6j, 2 + 2j]
+
+    npp = NPointPoly(x, y)
+    # call the NPointPoly-object to get interpolated value at any x
+    print(npp(2.5))
+```
+
+(see also `examples/examples.py`)
+
+# Documentation
+
+There is not much of an API, so there is no extra documentation page.
+Everything is, however, documented by means of function annotations and doc-strings
+within the code and should be visible when developing in a modern IDE.
+
 
 # Install
 
@@ -86,7 +110,14 @@ Run and list all tests with
 
     pytest -v
 
+### References
 
+    * Press, W.H., Teukolsky, S.A., Vetterling, W.T., Flannery, B.P., 2007.
+      Numerical Recipes 3rd Edition: The Art of Scientific Computing,
+      Auflage: 3. ed. Cambridge University Press, Cambridge, UK; New York.
+
+    * Wikipedia, Retrieved September 1, 2023, from 
+      https://en.wikipedia.org/wiki/Finite_difference_coefficient#Forward_finite_difference
 
 ### MIT licence
 Copyright (c) 2023 Richard Hartmann

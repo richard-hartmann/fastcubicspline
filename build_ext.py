@@ -20,12 +20,16 @@ import shutil
 
 import numpy
 
+# assume that the build_ext.py script is in the root directory of the package
+root_path = pathlib.Path(__file__).absolute().parent
+
 fcs_c_ext = Extension(
     "fastcubicspline.fcs_c",
-    sources=["./fastcubicspline/fcs_c.pyx"],
+    sources=[str(root_path / "fastcubicspline/fcs_c.pyx")],
     include_dirs=[numpy.get_include()],
-    extra_compile_args=['-O3'],
+    extra_compile_args=["-O3"],
 )
+
 
 # the following is adapted from https://stackoverflow.com/a/60163996
 class BuildFailed(Exception):
@@ -33,18 +37,17 @@ class BuildFailed(Exception):
 
 
 class ExtBuilder(build_ext):
-
     def run(self):
         try:
             build_ext.run(self)
         except (DistutilsPlatformError, FileNotFoundError):
-            raise BuildFailed('File not found. Could not compile C extension.')
+            raise BuildFailed("File not found. Could not compile C extension.")
 
     def build_extension(self, ext):
         try:
             build_ext.build_extension(self, ext)
         except (CCompilerError, DistutilsExecError, DistutilsPlatformError, ValueError):
-            raise BuildFailed('Could not compile C extension.')
+            raise BuildFailed("Could not compile C extension.")
 
 
 def build(setup_kwargs):
@@ -66,20 +69,18 @@ def cmd_build_ext():
     build(setup_kwargs)
     dist = Distribution(attrs=setup_kwargs)
 
-    build_ext_cmd = dist.get_command_obj('build_ext')
+    build_ext_cmd = dist.get_command_obj("build_ext")
     build_ext_cmd.ensure_finalized()
     build_ext_cmd.inplace = 1
     build_ext_cmd.run()
 
 
 def cmd_clean():
-    root_path = pathlib.Path(__file__).absolute().parent
-
     dirs_to_remove = [
-        root_path / 'build',
-        root_path / 'dist',
-        root_path / 'fastcubicspline.egg-info',
-        root_path / 'fastcubicspline/__pycache__',
+        root_path / "build",
+        root_path / "dist",
+        root_path / "fastcubicspline.egg-info",
+        root_path / "fastcubicspline/__pycache__",
     ]
     for d in dirs_to_remove:
         if d.exists():
@@ -88,36 +89,33 @@ def cmd_clean():
         else:
             print(f"cannot rm {d}, does not exist")
 
-    for f in (root_path / 'fastcubicspline').iterdir():
+    for f in (root_path / "fastcubicspline").iterdir():
         name = f.name
-        if (
-            (name == 'fcs_c.c') or
-            (name.startswith('fcs_c.') and name.endswith('.so'))
-        ):
+        if (name == "fcs_c.c") or (name.startswith("fcs_c.") and name.endswith(".so")):
             print(f"rm {f}")
             os.remove(f)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='',
+        description="",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
         "command",
-        help="what to do, choose between 'build_ext' (default), or 'clear'\n" +
-        "  build_ext: triggers Cython inplace build (using distutils magic)\n" +
-        "  clean: without asking remove 'build/', 'dist/', 'fcspline.egg-info/', 'fcspline/fcs_c.c', " +
-        "'fcspline/fcs_c*.so', 'fcspline/__pycache__'",
-        default='build_ext',
-        nargs='?',
+        help="what to do, choose between 'build_ext' (default), or 'clear'\n"
+        + "  build_ext: triggers Cython inplace build (using distutils magic)\n"
+        + "  clean: without asking remove 'build/', 'dist/', 'fcspline.egg-info/', 'fcspline/fcs_c.c', "
+        + "'fcspline/fcs_c*.so', 'fcspline/__pycache__'",
+        default="build_ext",
+        nargs="?",
         type=str,
     )
     args = parser.parse_args()
 
-    if args.command == 'build_ext':
+    if args.command == "build_ext":
         cmd_build_ext()
-    elif args.command == 'clean':
+    elif args.command == "clean":
         cmd_clean()
     else:
         raise ValueError(f"unknown command '{args.command}'")
