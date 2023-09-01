@@ -7,9 +7,12 @@ import numpy as np
 cimport numpy as np
 
 
+# cubic spline interpolation for a single point
+# float type y data
 cpdef double intp(double x, double x_low, double dx,
                   np.ndarray[np.float64_t, ndim=1] y,
                   np.ndarray[np.float64_t, ndim=1] ypp, int n) except *:
+
 
     cdef int j = int( (x-x_low) / dx)
 
@@ -28,6 +31,9 @@ cpdef double intp(double x, double x_low, double dx,
 
     return A * y[j] + B * y[j + 1] + C * ypp[j] + D * ypp[j + 1]
 
+
+# apply the cubic spline interpolation for a single point on a whole array of points
+# float type y data
 cpdef np.ndarray[np.float64_t, ndim=1] intp_array(np.ndarray[np.float64_t, ndim=1] x, double x_low, double dx,
                                                   np.ndarray[np.float64_t, ndim=1] y,
                                                   np.ndarray[np.float64_t, ndim=1] ypp, int n):
@@ -39,6 +45,8 @@ cpdef np.ndarray[np.float64_t, ndim=1] intp_array(np.ndarray[np.float64_t, ndim=
     return res
 
 
+# cubic spline interpolation for a single point
+# complex type y data
 cpdef complex intp_cplx(double x, double x_low, double dx,
                         np.ndarray[np.complex128_t, ndim=1] y,
                         np.ndarray[np.complex128_t, ndim=1] ypp, int n) except *:
@@ -60,6 +68,9 @@ cpdef complex intp_cplx(double x, double x_low, double dx,
 
     return A * y[j] + B * y[j + 1] + C * ypp[j] + D * ypp[j + 1]
 
+
+# apply the cubic spline interpolation for a single point on a whole array of points
+# complex type y data
 cpdef np.ndarray[np.complex128_t, ndim=1] intp_cplx_array(np.ndarray[np.float64_t, ndim=1] x, double x_low, double dx,
                                                           np.ndarray[np.complex128_t, ndim=1] y,
                                                           np.ndarray[np.complex128_t, ndim=1] ypp, int n):
