@@ -12,7 +12,7 @@ classifiers = [
     "Topic :: Utilities",
     "Intended Audience :: Science/Research"
 ]
-repository = "https://github.com/cimatosa/fcSpline"
+repository = "https://github.com/richard-hartmann/fastcubicspline"
 readme = "README.md"
 build = 'build_ext.py'
 
