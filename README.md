@@ -1,5 +1,6 @@
 # fastcubicspline
-a fast cubic spline interpolator for equally spaced values and complex data
+
+A fast cubic spline interpolator for equally spaced values and complex data.
 
 # Why not using scipy's Cubic Spline?
 
